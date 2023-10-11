@@ -29,7 +29,11 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+
+
+
     const products = client.db("roboTech").collection("products");
+    const cartCollection = client.db("roboTech").collection("carts");
 
     app.get('/products', async(req, res)=>{
       const cursor = products.find()
@@ -43,6 +47,21 @@ async function run() {
       const result = await products.findOne(query)
       res.send(result)
     })
+
+    app.get('/carts', async(req, res)=>{
+      const item = req.body
+      console.log(item)
+      const result = await cartCollection.insertOne(item)
+      res.send(result)
+    })
+
+
+
+
+
+
+
+
 
 
     // Send a ping to confirm a successful connection
