@@ -33,8 +33,17 @@ async function run() {
 
 
     const products = client.db("roboTech").collection("products");
+    const userCollection = client.db("roboTech").collection("users");
     const cartCollection = client.db("roboTech").collection("carts");
 
+    app.post('/users', async(req, res)=>{
+      const users = req.body
+      const result = await userCollection.insertOne(users)
+      res.send(result)
+    })
+   
+   
+   
     app.get('/products', async(req, res)=>{
       const cursor = products.find()
       const result = await cursor.toArray()
