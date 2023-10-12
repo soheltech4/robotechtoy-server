@@ -37,12 +37,15 @@ async function run() {
     const cartCollection = client.db("roboTech").collection("carts");
 
     app.post('/users', async(req, res)=>{
-      const users = req.body
-      const result = await userCollection.insertOne(users)
+      const user = req.body
+      const query = {email: user.email}
+      const existingUser = await userCollection.findOne(query)
+      if(existingUser){
+        return res.send({message : 'user already exist'})
+      }
+      const result = await userCollection.insertOne(user)
       res.send(result)
-    })
-   
-   
+    }) 
    
     app.get('/products', async(req, res)=>{
       const cursor = products.find()
