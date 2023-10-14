@@ -7,11 +7,15 @@ const app = express()
 const port = process.env.PORT || 5000
 //  middleware
 
-app.use(cors());
+const corsConfig = {
+  origin: '',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig))
+app.options("", cors(corsConfig))
+
 app.use(express.json())
-
-console.log(process.env.DB_USER)
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rbfkgiq.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -28,9 +32,6 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-
-
-
 
     const products = client.db("roboTech").collection("products");
     const userCollection = client.db("roboTech").collection("users");
@@ -53,12 +54,40 @@ async function run() {
       res.send(result)
     })
 
+    app.post('/products', async(req, res)=>{
+      const newToy = req.body
+      const result = await products.insertOne(newToy)
+      res.send(result)
+    })
+
+    app.patch('/product/:id', async(req, res)=>{
+      const id = req.params.id
+      const query = { _id: new ObjectId(id)}
+      const result = await products.updateOne(query)
+      res.send(result)    
+    })
+
     app.get('/products/:id', async(req, res)=> {
       const id = req.params.id 
       const query = { _id : new ObjectId(id)}
       const result = await products.findOne(query)
       res.send(result)
     })
+
+    app.delete('/products/:id', async(req, res)=>{
+      const id = req.params.id
+      const query = {_id : new ObjectId(id)};
+      const result = await products.deleteOne(query)
+      res.send(result)
+    })
+
+    // app.get('/products/:email', async(req, res)=> {
+    //   const user = req.body
+    //   const query = {email: user.email}
+    //   const result = await products.findOne(query)
+    //   res.send(result)
+    // })
+
 
     app.get('/carts', async(req, res)=>{
       const email = req.query.email 
