@@ -5,14 +5,7 @@ const app = express()
 const port = process.env.PORT || 5000
 
 //  middleware
-const corsConfig = {
-  origin: '',
-  credentials: true,
-  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
-}
-app.use(cors(corsConfig))
-app.options("", cors(corsConfig))
-
+app.use(cors())
 app.use(express.json())
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
