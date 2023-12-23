@@ -1,7 +1,7 @@
 const express = require("express");
+const app = express()
 const cors = require('cors')
 require('dotenv').config()
-const app = express()
 const port = process.env.PORT || 5000
 
 //  middleware
@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const products = client.db("roboTech").collection("products");
     const userCollection = client.db("roboTech").collection("users");
